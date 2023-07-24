@@ -32,7 +32,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 hintStyle: TextStyle(color : Colors.black54),
                 contentPadding:
                 EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                border: OutlineInputBorder( // changing the order to a curved one
+                border: OutlineInputBorder( // changing the box to a curved one
                   borderRadius: BorderRadius.all(Radius.circular(32.0)),
                 ),
                 enabledBorder: OutlineInputBorder( // default outer colour

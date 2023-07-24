@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'loginscreen.dart';
 import 'welcomepage.dart';
 import 'registerpage.dart';
 void main() {
@@ -16,7 +17,7 @@ void main() {
            )
          )
        ),
-       home: RegistrationScreen(),
+       home: LoginScreen(),
      );
    }
  }
