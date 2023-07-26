@@ -1,4 +1,7 @@
+import 'package:flash_chat/registerpage.dart';
 import 'package:flutter/material.dart';
+
+import 'loginscreen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -46,7 +49,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 borderRadius: BorderRadius.circular(30.0),
                 child: MaterialButton(
                   onPressed: () {
-                    //Go to login screen.
+                    // used to go to the login screen
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)
+                    {
+                      return LoginScreen();
+                    },
+                    ),);
                   },
                   minWidth: 200.0,
                   height: 42.0,
@@ -64,7 +72,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () {
-                    //Go to registration screen.
+                    // used to go to the registration screen
+                    // similarly, if you want add a button that enables you to go back, use navigator.pop(context)
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)
+                    {
+                      return RegistrationScreen();
+                    },
+                    ),);
                   },
                   minWidth: 200.0,
                   height: 42.0,

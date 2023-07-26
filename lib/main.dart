@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'loginscreen.dart';
 import 'welcomepage.dart';
-import 'registerpage.dart';
+
 void main() {
   runApp(const FlashChat());
 }
@@ -17,7 +16,7 @@ void main() {
            )
          )
        ),
-       home: LoginScreen(),
+       home: WelcomeScreen(),
      );
    }
  }

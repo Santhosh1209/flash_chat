@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'chatscreen.dart';
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -85,7 +87,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () {
-                    //Implement login functionality.
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)
+                    {
+                    return ChatScreen();
+                    },
+                    ),);
                   },
                   minWidth: 200.0,
                   height: 42.0,
