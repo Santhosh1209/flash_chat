@@ -50,7 +50,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 child: MaterialButton(
                   onPressed: () {
                     // used to go to the login screen
-                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)
+                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) // here, the route can be also be defined separately instead of using 'BuildContext context'
+                    // For this purpose, we can use navigator.pushNamed (context,route) where the route can either be something like a static property or a hard coded text
                     {
                       return LoginScreen();
                     },
