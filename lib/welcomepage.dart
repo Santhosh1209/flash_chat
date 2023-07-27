@@ -10,11 +10,27 @@ class WelcomeScreen extends StatefulWidget {
   State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin{
+  // SingleTickerProvider is used when we need a ticker for a single animation, whereas for multiple animations, we use TickerProvider
+  late AnimationController controller; // creating a controller
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+        duration: Duration(seconds: 1),
+        vsync: this);
+    // vsync is an @required property and is used to select the ticker for this particular animation
+    controller.forward(); // this is for starting the AnimationController
+    controller.addListener(() {
+      setState(() { // setState is used to perform a rebuild of the app after each time the ticker's value is changed
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white.withOpacity(controller.value), // controller.value is something that denotes the value of the ticker after each rebuild (goes from 0 to 1)
+      // so, its used for properties where the parameter's range is a double from 0 to 1
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
