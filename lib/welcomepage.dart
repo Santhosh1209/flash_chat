@@ -23,9 +23,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Container(
-                  child: Image.asset('images/logo.png'),
-                  height: 60.0,
+                Hero( // Hero widget is use to provide animations to the flutter app
+                  // if an element is present on both pages, we can use the hero widget to provide a smooth transition in the form of an animation
+                  tag: 'logo', // both the hero widgets on the two pages must have the same tag to interact with each other - it kinda acts like an identifier
+                  child: Container(
+                    child: Image.asset('images/logo.png'),
+                    height: 60.0,
+                  ),
                 ),
                 Text(
                   'Flash Chat',
