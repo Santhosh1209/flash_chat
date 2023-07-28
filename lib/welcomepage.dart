@@ -1,7 +1,7 @@
 import 'package:flash_chat/registerpage.dart';
 import 'package:flutter/material.dart';
-
 import 'loginscreen.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -17,10 +17,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
   void initState() {
     super.initState();
     controller = AnimationController(
-        duration: Duration(seconds: 1),
+        duration: Duration(seconds: 2),
         vsync: this);
     // vsync is an @required property and is used to select the ticker for this particular animation
+
+    Animation animation;
+    animation = ColorTween(begin: Colors.blueGrey,end: Colors.white).animate(controller);
+    // Tween uses a begin and end value and makes the animation move within that range
+
     controller.forward(); // this is for starting the AnimationController
+    // controller.reverse() makes the animation move in the reverse direction
+
     controller.addListener(() {
       setState(() { // setState is used to perform a rebuild of the app after each time the ticker's value is changed
       });
@@ -29,8 +36,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white.withOpacity(controller.value), // controller.value is something that denotes the value of the ticker after each rebuild (goes from 0 to 1)
-      // so, its used for properties where the parameter's range is a double from 0 to 1
+      backgroundColor: Colors.white,
+      // controller.value is something that denotes the value of the ticker after each rebuild (goes from 0 to 1)
+      // so, its used for properties where the parameter's range is a double from 0 to 1.
+      // By changing its upperbound value we can change it's max range as well
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -47,13 +56,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                     height: 60.0,
                   ),
                 ),
-                Text(
-                  'Flash Chat',
-                  style: TextStyle(
-                    fontSize: 45.0,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.black
-                  ),
+                AnimatedTextKit( // this widget is used by importing the animated text kit package
+                  animatedTexts: [
+                    TypewriterAnimatedText('Flash Chat',
+                    textStyle: TextStyle(
+                        fontSize: 45.0,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.black
+                    ),
+                      speed: const Duration(milliseconds: 120),// changing the typing speed
+                    ),
+                  ],
                 ),
               ],
             ),
