@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'chatscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  bool loading = false;
   final auth = FirebaseAuth.instance;
   late String email;
   late String passwd;
@@ -102,6 +104,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () async{
+                    setState(() {
+                      loading=true;
+                    });
                     try {
                       final user = await auth.signInWithEmailAndPassword(
                           email: email, password: passwd);
@@ -112,6 +117,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         ),);
                       }
+                      setState(() {
+                        loading=false;
+                      });
                     }
                     catch(e)
                     {
@@ -120,9 +128,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   minWidth: 200.0,
                   height: 42.0,
-                  child: Text(
+                  child: loading ? CircularProgressIndicator(color: Colors.white,): Text(
                     'Log In',
-                  ),
+                  ),//? - true, : - false
                 ),
               ),
             ),

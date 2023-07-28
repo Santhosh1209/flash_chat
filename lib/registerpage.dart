@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'chatscreen.dart';
 class RegistrationScreen extends StatefulWidget {
   @override
@@ -12,6 +11,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   // NOTE : _ is used before a function/variable to make it private
   late String email; // late allows us to define the string without initializing it
   late String passwd;
+  bool spinner = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,6 +95,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 elevation: 5.0,
                 child: MaterialButton(
                   onPressed: () async {
+                    setState(() {
+                      spinner=true;
+                    });
                     try {
                       final newUser = await auth.createUserWithEmailAndPassword(
                           email: email,
@@ -107,6 +110,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           },
                           ),);
                         }
+                      setState(() {
+                        spinner=false;
+                      });
                     }
                     catch(e) // try and catch block is used to ensure only valid registrations take place
                     {
@@ -115,7 +121,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   },
                   minWidth: 200.0,
                   height: 42.0,
-                  child: Text(
+                  child: spinner ? CircularProgressIndicator(color: Colors.white,):Text(
                     'Register',
                     style: TextStyle(color: Colors.white),
                   ),
