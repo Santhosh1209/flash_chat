@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'chatscreen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -51,6 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderRadius: BorderRadius.all(Radius.circular(32.0)),
                 ),
               ),
+              style: TextStyle(color: Colors.black),
             ),
             SizedBox(
               height: 8.0,
@@ -78,6 +78,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderRadius: BorderRadius.all(Radius.circular(32.0)),
                 ),
               ),
+              style: TextStyle(color: Colors.black),
+
             ),
             SizedBox(
               height: 24.0,

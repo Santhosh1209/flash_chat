@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "155731701144",
+    "project_id": "flash-chat-6237a",
+    "storage_bucket": "flash-chat-6237a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155731701144:android:dd9a9f3a8e532ab1fd4fed",
+        "android_client_info": {
+          "package_name": "com.santy.flash_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "155731701144-kt48m1q7pq7glqomlmbpa6mvjvv3blfn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCU14WF86oneTmra1dlkt5PUP9pb4TJ_l8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "155731701144-kt48m1q7pq7glqomlmbpa6mvjvv3blfn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
