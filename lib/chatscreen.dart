@@ -1,12 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flash_chat/constants.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 class ChatScreen extends StatefulWidget {
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  final auth = FirebaseAuth.instance;
+  late User loggedinUser; // FirebaseUser = User
+
+  @override
+  void initState() { // used to call curretUser() function
+    // used whehever we insert a stateful widget to the widget tree
+    super.initState(); // default implementation of initState();
+    CurrentUser();
+  }
+  void CurrentUser() async// checks to see if there is a current user who has signed in
+  {
+    try {
+      final user = await auth.currentUser; // will be NULL if no one has logged in
+      if (user != null) {
+        loggedinUser = user;
+      }
+    }
+    catch(e)
+    {
+      print(e);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +38,8 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
-                //Implement logout functionality
+                auth.signOut();
+                Navigator.pop(context);
               }),
         ],
         title: Text('⚡️Chat'),

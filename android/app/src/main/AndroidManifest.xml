@@ -2,7 +2,7 @@
     package="com.example.flash_chat">
    <application
         android:label="flash_chat"
-        android:name="${applicationName}"
+       android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

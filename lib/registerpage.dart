@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+import 'chatscreen.dart';
 class RegistrationScreen extends StatefulWidget {
   @override
   _RegistrationScreenState createState() => _RegistrationScreenState();
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  final auth = FirebaseAuth.instance; // final is used to make sure that it's value can't be changed later
+  // NOTE : _ is used before a function/variable to make it private
+  late String email; // late allows us to define the string without initializing it
+  late String passwd;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,8 +33,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 48.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
               onChanged: (value) {
-                //Do something with the user input.
+                email = value;
               },
               decoration: InputDecoration(
                 hintText: 'Enter your email',
@@ -53,8 +60,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               height: 8.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
+              obscureText: true, // this helps us hide the password
               onChanged: (value) {
-                //Do something with the user input.
+                passwd=value;
               },
               decoration: InputDecoration(
                 hintText: 'Enter your password',
@@ -85,8 +94,24 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 borderRadius: BorderRadius.all(Radius.circular(30.0)),
                 elevation: 5.0,
                 child: MaterialButton(
-                  onPressed: () {
-                    //Implement registration functionality.
+                  onPressed: () async {
+                    try {
+                      final newUser = await auth.createUserWithEmailAndPassword(
+                          email: email,
+                          password: passwd); // using properties of firebase auth, we create an account in the FUTURE, which is why we use the async and await methods and then store it in 'newUser'
+                      if (newUser != Null) // ie., registration is complete
+                        {
+                          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)
+                          {
+                            return ChatScreen();
+                          },
+                          ),);
+                        }
+                    }
+                    catch(e) // try and catch block is used to ensure only valid registrations take place
+                    {
+                      print((e)); // print the error that occurs
+                    }
                   },
                   minWidth: 200.0,
                   height: 42.0,

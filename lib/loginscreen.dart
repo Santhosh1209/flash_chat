@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'chatscreen.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final auth = FirebaseAuth.instance;
+  late String email;
+  late String passwd;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,8 +31,11 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 48.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
               onChanged: (value) {
-                //Do something with the user input.
+                setState(() {
+                  email=value;
+                });
               },
               decoration: InputDecoration(
                 hintText: 'Enter your email',
@@ -56,8 +62,12 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 8.0,
             ),
             TextField(
+              textAlign: TextAlign.center,
+              obscureText: true, // this helps us hide the password
               onChanged: (value) {
-                //Do something with the user input.
+                setState(() {
+                  passwd=value;
+                });
               },
               decoration: InputDecoration(
                 hintText: 'Enter your password.',
@@ -91,12 +101,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 borderRadius: BorderRadius.all(Radius.circular(30.0)),
                 elevation: 5.0,
                 child: MaterialButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context)
+                  onPressed: () async{
+                    try {
+                      final user = await auth.signInWithEmailAndPassword(
+                          email: email, password: passwd);
+                      if (user != null) {
+                        Navigator.push(context, MaterialPageRoute(builder: (
+                            BuildContext context) {
+                          return ChatScreen();
+                        },
+                        ),);
+                      }
+                    }
+                    catch(e)
                     {
-                    return ChatScreen();
-                    },
-                    ),);
+                      print(e);
+                    }
                   },
                   minWidth: 200.0,
                   height: 42.0,
