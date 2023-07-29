@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'loginscreen.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
+// Notes : Async means that some function is asynchronous and you might need to wait a bit to get its result. Await literally means - wait here until this function is finished and you will get its return value. Future is a type that 'comes from the future' and returns value from your asynchronous function.
+
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
 
