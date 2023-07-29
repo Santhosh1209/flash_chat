@@ -35,7 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void getMessages()async// used to push data into the database and get em
+  void getMessages()async// used to push data into the database and also get them
   {
     await for (var snapshot in store.collection('messages').snapshots()) // for - in loop is used to get all values of snapshots in the variable 'snapshot'
       {
