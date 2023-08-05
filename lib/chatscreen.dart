@@ -153,7 +153,6 @@ class _ChatScreenState extends State<ChatScreen> {
                     TextButton(
                       onPressed: () {
                         if (userMessage.trim().isEmpty) return; // Don't send empty messages
-
                         store.collection('messages').add({
                           'text': userMessage,
                           'sender': loggedinUser.email,
