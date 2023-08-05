@@ -64,64 +64,110 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            StreamBuilder<QuerySnapshot>(
-                stream: store.collection('messages').snapshots(),
-                builder: (context,snapshot)
-            {
-              if (!snapshot.hasData)
-            {
-              return Center(
-                child: CircularProgressIndicator( // to prevent errors when there is no data available
-                  backgroundColor: Colors.lightBlueAccent,
+        child: Container(
+          color: Colors.white, // Change the background color here (e.g., Colors.white)
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: store.collection('messages').snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) { // null check (data isn't present)
+                      return Center(
+                        child: CircularProgressIndicator(
+                          backgroundColor: Colors.lightBlueAccent,
+                        ),
+                      );
+                    }
+                    final messages = snapshot.data?.docs; //? - null check
+                    List<Widget> messageWidgets = [];
+                    for (var message in messages!) {
+                      var data = message.data() as Map;
+                      final messageText = data['text'];
+                      final messageSender = data['sender'];
+
+                      // Determine if the message was sent by the logged-in user to make his/her go the right
+                      final isMe = messageSender == loggedinUser.email;
+                      // isMe is a boolean variable
+
+                    // Adding a message bubble with proper styling
+                      final messageBubble = Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                        child: Column(
+                          crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                          // isMe -> true : alignment starts from the end of column
+                          // isMe -> false : alignment starts from the start of column
+                          children: [
+                            Text(
+                              isMe ? 'You' : messageSender,
+                              // depending on whether isMe is true or false, 'You' or 'messageSender' is picked
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                            Material(
+                              elevation: 5.0,
+                              borderRadius: isMe ? BorderRadius.only(
+                                topLeft: Radius.circular(15.0),
+                                bottomLeft: Radius.circular(15.0),
+                                bottomRight: Radius.circular(15.0),
+                              ) : BorderRadius.only(
+                                topRight: Radius.circular(15.0),
+                                bottomLeft: Radius.circular(15.0),
+                                bottomRight: Radius.circular(15.0),
+                              ),
+                              // irrespective of the value of isMe, i'm using the same borderradius values
+                              color: isMe ? Colors.lightBlueAccent : Colors.lightGreen,
+                              child: Padding(
+                                padding: EdgeInsets.all(10.0),
+                                child: Text(
+                                  messageText,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+
+                      messageWidgets.add(messageBubble);
+                    }
+                    return ListView(
+                      reverse: true, // To display the latest messages at the bottom
+                      children: messageWidgets,
+                    );
+                  },
                 ),
-              );
-            }
-              final messages = snapshot.data?.docs; // ? - null check
-              List<Text> messageWidgets = [];
-              for (var message in messages!) {
-                var data = message.data() as Map; // add Typecast
-                final messageText = data['text'];
-                final messageSender = data['sender'];
-                final messageWidget = Text('$messageText from $messageSender');
-                messageWidgets.add(messageWidget); // you have to add item to list
-              }
-              return Column(
-                  children: messageWidgets // your list should assign to children
-              );
-            }),
-            Container(
-              decoration: kMessageContainerDecoration,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      onChanged: (value) {
-                        userMessage = value;
-                      },
-                      decoration: kMessageTextFieldDecoration,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      store.collection('messages').add({
-                        'text':userMessage,
-                        'sender':loggedinUser.email,
-                      });
-                    },
-                    child: Text(
-                      'Send',
-                      style: kSendButtonTextStyle,
-                    ),
-                  ),
-                ],
               ),
-            ),
-          ],
+              Container(
+                decoration: kMessageContainerDecoration,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        onChanged: (value) {
+                          userMessage = value;
+                        },
+                        decoration: kMessageTextFieldDecoration,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        store.collection('messages').add({
+                          'text': userMessage,
+                          'sender': loggedinUser.email,
+                        });
+                      },
+                      child: Text(
+                        'Send',
+                        style: kSendButtonTextStyle,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
