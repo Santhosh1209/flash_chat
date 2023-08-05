@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'chatscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -13,6 +14,18 @@ class _LoginScreenState extends State<LoginScreen> {
   final auth = FirebaseAuth.instance;
   late String email;
   late String passwd;
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT, // duration of the toast is short
+      gravity: ToastGravity.BOTTOM, // toast will appear at the bottom of the screen.
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -104,34 +117,37 @@ class _LoginScreenState extends State<LoginScreen> {
                 borderRadius: BorderRadius.all(Radius.circular(30.0)),
                 elevation: 5.0,
                 child: MaterialButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     setState(() {
-                      loading=true;
+                      loading = true;
                     });
-                    try {
-                      final user = await auth.signInWithEmailAndPassword(
-                          email: email, password: passwd);
+                    try { // If the login is successful, the if block will be executed
+                      final user = await auth.signInWithEmailAndPassword(email: email, password: passwd);
                       if (user != null) {
-                        Navigator.push(context, MaterialPageRoute(builder: (
-                            BuildContext context) {
-                          return ChatScreen();
-                        },
-                        ),);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (BuildContext context) {
+                            return ChatScreen();
+                          }),
+                        );
                       }
                       setState(() {
-                        loading=false;
+                        loading = false; // loading is set to false if the login in unsuccessful
+                      });
+                    } catch (e) {
+                      print(e);
+                      showToast("Invalid email or password"); // Show toast on login failure
+                      setState(() {
+                        loading = false;
                       });
                     }
-                    catch(e)
-                    {
-                      print(e);
-                    }
-                  },
+                    },
                   minWidth: 200.0,
                   height: 42.0,
-                  child: loading ? CircularProgressIndicator(color: Colors.white,): Text(
-                    'Log In',
-                  ),//? - true, : - false
+                  child: loading ? CircularProgressIndicator(
+                    color: Colors.white,) : Text('Log In',),
+                  // If loading is true, the button shows a CircularProgressIndicator in white color, indicating that the login process is ongoing.
+                  // If loading is false, the button shows the text "Log In".
                 ),
               ),
             ),
@@ -141,3 +157,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
