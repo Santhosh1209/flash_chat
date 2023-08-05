@@ -14,7 +14,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final auth = FirebaseAuth.instance; // used to use the authorization section of Firebase
   final store = FirebaseFirestore.instance; // used to use cloud firestore
   late User loggedinUser; // FirebaseUser = User
-  late String userMessage; // message that is sent by the user will be stored using this variable
+  late String userMessage = ''; // message that is sent by the user will be stored using this variable
   @override
   void initState() { // used to call currentUser() function
     // used whenever we insert a stateful widget to the widget tree
@@ -65,57 +65,53 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: SafeArea(
         child: Container(
-          color: Colors.white, // Change the background color here (e.g., Colors.white)
+          color: Colors.white,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: store.collection('messages').snapshots(),
+                  stream: store.collection('messages').orderBy('timestamp', descending: true).snapshots(),
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData) { // null check (data isn't present)
+                    if (!snapshot.hasData) {
                       return Center(
                         child: CircularProgressIndicator(
                           backgroundColor: Colors.lightBlueAccent,
                         ),
                       );
                     }
-                    final messages = snapshot.data?.docs; //? - null check
-                    List<Widget> messageWidgets = [];
+
+                    final messages = snapshot.data?.docs;
+                    final List<Widget> messageWidgets = [];
                     for (var message in messages!) {
                       var data = message.data() as Map;
                       final messageText = data['text'];
                       final messageSender = data['sender'];
 
-                      // Determine if the message was sent by the logged-in user to make his/her go the right
-                      final isMe = messageSender == loggedinUser.email;
-                      // isMe is a boolean variable
+                      final isMe = messageSender == loggedinUser!.email;
 
-                    // Adding a message bubble with proper styling
                       final messageBubble = Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                         child: Column(
                           crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-                          // isMe -> true : alignment starts from the end of column
-                          // isMe -> false : alignment starts from the start of column
                           children: [
                             Text(
                               isMe ? 'You' : messageSender,
-                              // depending on whether isMe is true or false, 'You' or 'messageSender' is picked
                               style: TextStyle(color: Colors.black54),
                             ),
                             Material(
                               elevation: 5.0,
-                              borderRadius: isMe ? BorderRadius.only(
+                              borderRadius: isMe
+                                  ? BorderRadius.only(
                                 topLeft: Radius.circular(15.0),
                                 bottomLeft: Radius.circular(15.0),
                                 bottomRight: Radius.circular(15.0),
-                              ) : BorderRadius.only(
+                              )
+                                  : BorderRadius.only(
                                 topRight: Radius.circular(15.0),
                                 bottomLeft: Radius.circular(15.0),
                                 bottomRight: Radius.circular(15.0),
                               ),
-                              // irrespective of the value of isMe, i'm using the same borderradius values
                               color: isMe ? Colors.lightBlueAccent : Colors.lightGreen,
                               child: Padding(
                                 padding: EdgeInsets.all(10.0),
@@ -131,8 +127,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
                       messageWidgets.add(messageBubble);
                     }
+
                     return ListView(
-                      reverse: true, // To display the latest messages at the bottom
+                      reverse: true,
                       children: messageWidgets,
                     );
                   },
@@ -149,13 +146,23 @@ class _ChatScreenState extends State<ChatScreen> {
                           userMessage = value;
                         },
                         decoration: kMessageTextFieldDecoration,
+                        style: TextStyle(color: Colors.black),
+                        controller: TextEditingController(text: userMessage), // Set the initial value of the TextField
                       ),
                     ),
                     TextButton(
                       onPressed: () {
+                        if (userMessage.trim().isEmpty) return; // Don't send empty messages
+
                         store.collection('messages').add({
                           'text': userMessage,
                           'sender': loggedinUser.email,
+                          'timestamp': FieldValue.serverTimestamp(),
+                        });
+
+                        // Clear the TextField after sending the message
+                        setState(() {
+                          userMessage = "";
                         });
                       },
                       child: Text(
