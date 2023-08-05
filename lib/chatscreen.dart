@@ -34,11 +34,10 @@ class _ChatScreenState extends State<ChatScreen> {
       print(e);
     }
   }
-
   void getMessages()async// used to push data into the database and also get them
   {
     await for (var snapshot in store.collection('messages').snapshots()) // for - in loop is used to get all values of snapshots in the variable 'snapshot'
-      {
+      { // aka data is obtained in the form of streams - this should be converted into widgets
         for (var message in snapshot.docs) // this for - in loop is used to get each message from the snapshot
           {
             print(message.data());
@@ -69,6 +68,31 @@ class _ChatScreenState extends State<ChatScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            StreamBuilder<QuerySnapshot>(
+                stream: store.collection('messages').snapshots(),
+                builder: (context,snapshot)
+            {
+              if (!snapshot.hasData)
+            {
+              return Center(
+                child: CircularProgressIndicator( // to prevent errors when there is no data available
+                  backgroundColor: Colors.lightBlueAccent,
+                ),
+              );
+            }
+              final messages = snapshot.data?.docs; // ? - null check
+              List<Text> messageWidgets = [];
+              for (var message in messages!) {
+                var data = message.data() as Map; // add Typecast
+                final messageText = data['text'];
+                final messageSender = data['sender'];
+                final messageWidget = Text('$messageText from $messageSender');
+                messageWidgets.add(messageWidget); // you have to add item to list
+              }
+              return Column(
+                  children: messageWidgets // your list should assign to children
+              );
+            }),
             Container(
               decoration: kMessageContainerDecoration,
               child: Row(
